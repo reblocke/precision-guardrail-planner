@@ -1,150 +1,191 @@
-# Scientific Applet Template
+# Precision Guardrail Planner
 
-[![CI](https://github.com/reblocke/scientific-applet-template/actions/workflows/ci.yml/badge.svg)](https://github.com/reblocke/scientific-applet-template/actions/workflows/ci.yml)
+[![CI](https://github.com/reblocke/precision-guardrail-planner/actions/workflows/ci.yml/badge.svg)](https://github.com/reblocke/precision-guardrail-planner/actions/workflows/ci.yml)
 
-Reusable client-side Python scaffold for a focused scientific applet
+[Open the client-side app](https://reblocke.github.io/precision-guardrail-planner/) ·
+[browse the focused-tool catalog](https://reblocke.github.io/wald-inference-tools/)
 
-This is an engineering template, not a statistical package or validated scientific tool. Its
-two-number arithmetic demonstration exists only to prove the complete Python-to-worker-to-browser
-path. Replace that demonstration and complete the author-action prompts before making a scientific
-claim.
+This focused app answers one design-conditioned question:
 
-## Create an app
+> At an assumed true effect and selected-claim rule, what working-scale standard error and
+> relative information are required to meet the chosen selected-claim probability, Type S, and
+> Type M guardrails?
 
-Use GitHub’s “Use this template” control, clone the new repository, then run the guarded
-initializer once:
+It is an educational and research-facing inverse-precision tool for one-parameter Wald models.
+It is not a formal study-design calculator, a clinical recommendation, or evidence that a target
+effect is clinically validated.
 
-```bash
-uv sync --locked
-uv run python scripts/initialize_template.py \
-  --repository-name compatibility-curve \
-  --distribution-name compatibility-curve \
-  --import-name compatibility_curve \
-  --app-title "Wald Compatibility Curve" \
-  --description "A focused client-side scientific applet"
+## What it reports
+
+For every selected mandatory guardrail, the app reports:
+
+- finite/infeasible status;
+- required working-scale standard error;
+- required relative-information multiplier;
+- approximate 95% working-scale CI width;
+- achieved selected-claim probability, Type S, and Type M at the solved precision;
+- a solver note naming current sufficiency or the reason no finite solution was found.
+
+The joint result is the smallest finite required SE—equivalently the largest information
+multiplier—across all requested targets. It identifies every constraint tying the joint
+requirement within a documented relative multiplier tolerance of `1e-8`. If current precision
+already meets every target, the joint multiplier is exactly `1.0`. If any mandatory target is
+infeasible, the joint status is “no finite joint solution under the selected assumptions,” while
+all per-target rows remain visible.
+
+Optional sensitivity evaluates that same joint question across a user-entered plausible
+true-effect range. Gaps remain gaps; they are not interpolated into solutions. The range is a
+sensitivity analysis, not a probability distribution or posterior for the true effect.
+
+## Inputs and working scales
+
+Current precision can be entered as:
+
+- a positive finite working-scale SE; or
+- the limits of a reported 95% CI, from which the released numerical core reconstructs the
+  working-scale SE.
+
+The CI midpoint is not adopted as the true effect. Users separately enter the assumed true
+effect, effect measure, null, alpha, selected-claim rule, direction, any required claim threshold,
+and at least one guardrail.
+
+Ratio measures—odds, risk, hazard, incidence-rate, and mean ratios—are converted to the log
+working scale. Their SE, CI width, effect distance, and Type M calculations are therefore
+log-scale quantities. Additive measures use the identity working scale.
+
+The six released selected-claim rules are supported:
+
+1. two-sided `p < alpha` against the null;
+2. one-sided positive `p < alpha`;
+3. one-sided negative `p < alpha`;
+4. CI excludes the null in the selected direction;
+5. estimate exceeds a claim threshold and two-sided `p < alpha`;
+6. CI excludes a claim threshold.
+
+Threshold rules require the threshold to lie beyond the null in the selected direction. An
+assumed truth at/near the null leaves Type S/Type M planning undefined; a truth on the
+unattainable side of a threshold may make a selected-claim probability target infeasible.
+
+## Information is not automatically sample size
+
+The numerical core defines relative information through:
+
+```text
+required SE = current SE / sqrt(information multiplier)
 ```
 
-The command validates names, updates package paths and repository metadata, removes
-template-maintainer-only checks, writes an ignored replacement report, and fails if any required
-template identity remains. It never enters or edits `.git`. A second run is refused unless
-`--force` is explicit.
+That multiplier is not automatically a sample-size multiplier. The app shows an approximate
+sample-size projection only after the user actively enables:
 
-Review the diff, complete every `AUTHOR ACTION REQUIRED` prompt, then verify:
+> Assume information is proportional to sample size and all other design features remain
+> unchanged.
 
-```bash
-uv sync --locked
-uv run playwright install chromium webkit
-make verify
+With that assumption active, it reports the ceiling of current effective sample size times the
+joint information multiplier. It does not model clustering, attrition, allocation, event rates,
+censoring, covariate adjustment, finite populations, or any other design-specific feature.
+
+## Numerical authority and architecture
+
+The app does not implement a Wald solver. All effect conversion, CI reconstruction, selected
+claim semantics, forward Type S/M metrics, per-target inversion, joint solution, and sensitivity
+results come from the exact released
+[`wald-inference` 0.4.0](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.0)
+wheel:
+
+```text
+https://github.com/reblocke/wald-inference-core/releases/download/v0.4.0/wald_inference-0.4.0-py3-none-any.whl
+SHA-256 401a0cc2a182918764149eb03c79672217b647147c494215c83515fd609c7af6
 ```
 
-The initializer updates the existing lockfile identity, so `uv sync --locked` works immediately.
-If dependencies are added or changed later, intentionally run `uv lock`, review `uv.lock`, and
-rerun the full verification suite.
-
-Detailed initialization and replacement guidance is in
-[docs/TEMPLATE_USAGE.md](docs/TEMPLATE_USAGE.md).
-
-## Architecture
+The local `precision_guardrail` package owns only strict request validation, natural/working-scale
+display orchestration, response assembly, warnings, reviewer text, exports, and the explicitly
+opted-in arithmetic sample-size projection.
 
 ```text
 browser form
   -> dedicated Web Worker
   -> verified generated Python bundle
-  -> template_applet.contract.calculate_json
+  -> precision_guardrail.contract.calculate_json
+  -> wald_inference joint/sensitivity APIs
   -> strict JSON response
-  -> textual summary + Plotly hook + explicit exports
+  -> textual joint/per-target results + plot + local exports
 ```
 
-- `src/template_applet/` is the only source-of-truth Python package.
-- `browser-stage.toml` lists the app and zero or more optional, exact-version external packages.
-- `scripts/stage_browser_packages.py` discovers installed packages from the locked environment,
-  removes stale stage output, and emits file, package, and bundle SHA-256 hashes.
-- `web/pyodide_worker.js` verifies the manifest and every staged byte before loading Python. The
-  main thread can terminate and restart the worker after a failure.
-- `web/js/` separates inputs, runtime lifecycle, result rendering, exports, and accessibility.
-- `web/assets/py/` is generated, ignored, and never hand-edited.
+`src/precision_guardrail/` is the source-of-truth app package. `make stage-web` copies the locked
+app and Core packages into ignored `web/assets/py/`, records file/package/bundle hashes, and
+removes stale generated files. The worker verifies every staged byte before importing Python.
+Never hand-edit generated stage files.
 
-The template is copied at project creation time; it is not a shared runtime UI dependency.
+The focused response has exactly these top-level sections:
 
-## Optional external scientific core
-
-The default stage has no external core. Add an installed, locked, pure-Python package to
-`browser-stage.toml`:
-
-```toml
-pyodide_packages = ["numpy", "scipy"]
-
-[[packages]]
-role = "core"
-distribution = "example-scientific-core"
-import_name = "example_scientific_core"
-version = "1.2.3"
-source = "external"
-artifact_url = "https://github.com/OWNER/REPO/releases/download/v1.2.3/example.whl"
-artifact_sha256 = "REPLACE_WITH_THE_64_CHARACTER_SHA256"
+```text
+meta
+current_precision
+assumptions
+selection_rule
+target_effect
+per_target_results
+joint_result
+sensitivity_optional
+sample_size_projection_optional
+warnings
 ```
 
-Pin the same artifact in `pyproject.toml` and `uv.lock`. Staging fails on a version mismatch,
-lock mismatch, artifact provenance mismatch, modified installed file, symlink, or unsafe package
-shape. External packages must be pure Python, use one regular top-level package, and expose
-`__version__`. List any Pyodide-provided dependencies in `pyodide_packages`.
+It contains no observed compatibility curve, relative-likelihood result, S−2 result, or full Type
+S/M curve. Forward design metrics appear only as achieved values at solved precision and as
+support for sensitivity rows.
 
-## Browser and exports
+## Exports
 
-The minimal responsive shell includes labels, linked error summaries, visible focus, an
-`aria-live` status, a keyboard-operable advanced-controls pattern, a textual result, a table, and
-a plot hook. Export helpers provide:
+All exports are explicit local user actions:
 
-- CSV from an explicit column list;
-- dashboard PNG;
-- figure-only/manuscript PNG;
-- copyable caption;
-- deterministic filename slugs.
+- scenario/target CSV, including assumptions and one row per target plus the joint result;
+- sensitivity CSV, including per-target and joint rows at every assumed effect;
+- figure PNG;
+- summary PNG;
+- copyable grant/reviewer text and figure caption.
 
-The example exports only the three displayed demonstration rows. Downstream apps must explicitly
-define their own columns, figure dimensions, caption, and scope.
+Undefined values are blank in CSV and `null` in JSON, never `NaN` or infinity. Plots are not the
+sole carrier of a result: equivalent feasibility, target, multiplier, and binding information is
+available as text and tables.
 
-## Privacy
-
-The application is static and client-side. It has no backend, database, telemetry, cookies,
-browser storage, or input-bearing URL state. Inputs exist only in page and worker memory.
-Static CDN requests load pinned runtime libraries and do not contain user values. See
-[docs/PRIVACY.md](docs/PRIVACY.md).
-
-## Commands
+## Development and verification
 
 ```bash
 uv sync --locked
+uv run playwright install chromium webkit
 make stage-web
-make fmt
 make fmt-check
 make lint
 make test
 make e2e
 make e2e-webkit-smoke
 make verify
-make serve
-make clean
+uv run pytest -q tests/scientific_reference/ tests/regression/
+git diff --check
+git status --short
 ```
 
-`make verify` expects Chromium and WebKit to have been installed. CI runs the same targets. Pages
-deploys the staged `web/` directory, and tagged releases rerun all checks before publishing a
-deterministic source archive, browser-stage manifest, and checksums.
+The suite covers the frozen integrated B06/B07 baseline values, all six claim rules, current
+sufficiency, strictness/ties, infeasibility, near-null behavior, threshold unattainability,
+forward-metric attainment, information and CI-width identities, sensitivity monotonicity where
+expected, ratio conversion, direct-SE/CI equivalence, the Core information cap, strict JSON,
+sample-size opt-in/rounding, deterministic staging, Chromium, WebKit, privacy, accessibility, and
+exports.
 
-## Author checklist
+See [scientific scope](docs/SCIENTIFIC_SCOPE.md),
+[validation](docs/VALIDATION.md), [decisions](docs/DECISIONS.md),
+[runtime provenance](docs/RUNTIME_DEPENDENCIES.md), and
+[migration provenance](docs/MIGRATION_PROVENANCE.md).
 
-Before calling an initialized app complete:
+## Privacy
 
-1. Define the scientific question, assumptions, input/output units, formula authorities,
-   validation targets, limitations, and non-goals.
-2. Replace the demo request, response, computation, chart, table, caption, and fixtures.
-3. Decide whether an external released scientific core is required and pin it exactly.
-4. Replace generic browser copy without overstating validation or clinical readiness.
-5. Verify privacy, accessibility, strict JSON, Chromium, WebKit, cold initialization, and Pages.
-6. Update citation, license applicability, hosted URL, maintenance status, decision records, and
-   release notes.
+The app is static and client-side. It has no backend, telemetry, analytics, browser storage,
+cookies, upload, input-bearing URL, or application logging. Inputs exist only in page and worker
+memory. Static CDN requests do not include entered values. CSV/PNG files are created only after
+an explicit local download action. See [docs/PRIVACY.md](docs/PRIVACY.md).
 
 ## License and citation
 
-Code is MIT licensed. Copyright (c) 2026 Brian Locke. `CITATION.cff` is valid template metadata,
-but its author-action message must be resolved for the initialized scientific app.
+Code is MIT licensed. Copyright (c) 2026 Brian Locke. Cite the exact release or commit used;
+machine-readable metadata is in [CITATION.cff](CITATION.cff).

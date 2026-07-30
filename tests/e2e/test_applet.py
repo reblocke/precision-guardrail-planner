@@ -14,65 +14,114 @@ def _ready(page: Page, app_url: str) -> None:
     )
 
 
-def test_worker_loads_and_calculates(page: Page, app_url: str) -> None:
-    _ready(page, app_url)
-
+def _calculate(page: Page) -> None:
     page.locator("#calculate").click()
+    expect(page.locator("#runtime-status")).to_have_text(
+        "Calculation complete.",
+        timeout=120_000,
+    )
 
-    expect(page.locator("#runtime-status")).to_have_text("Calculation complete.")
-    expect(page.locator("#result-summary")).to_contain_text("2 + 3 = 5")
-    expect(page.locator("#result-table tbody tr")).to_have_count(3)
+
+def test_worker_loads_core_and_calculates_joint_requirement(
+    page: Page,
+    app_url: str,
+) -> None:
+    _ready(page, app_url)
+    _calculate(page)
+
+    expect(page.locator("#runtime-versions")).to_contain_text("wald-inference 0.4.0")
+    expect(page.locator("#result-summary")).to_contain_text("4.908")
+    expect(page.locator("#conditioning-result")).to_contain_text(
+        "condition on the assumed true mean difference 0.2"
+    )
+    expect(page.locator("#joint-status")).to_contain_text("finite joint precision requirement")
+    expect(page.locator("#target-table tbody tr")).to_have_count(3)
+    expect(page.locator("#target-table tbody")).to_contain_text(
+        "Minimum selected-claim probability"
+    )
     expect(page.locator("#plot .plot-container")).to_be_visible()
-    expect(page.locator("#runtime-versions")).to_contain_text("0.1.0")
+    assert "binding" in page.locator("#reviewer-text").input_value()
 
 
-def test_validation_error_and_worker_recovery(page: Page, app_url: str) -> None:
+def test_validation_error_is_safe_and_worker_recovers(
+    page: Page,
+    app_url: str,
+) -> None:
     _ready(page, app_url)
-    page.locator("#first-value").fill("1e308")
-    page.locator("#second-value").fill("1e308")
+    page.locator("#alpha").fill("0")
     page.locator("#calculate").click()
 
-    expect(page.locator("#error-summary")).to_contain_text("total must be finite")
+    expect(page.locator("#error-summary")).to_contain_text("Alpha must be between 0 and 1")
     expect(page.locator("#runtime-status")).to_have_attribute("data-state", "error")
+    expect(page.locator("#error-summary")).not_to_contain_text("Traceback")
+    expect(page.locator("#error-summary")).not_to_contain_text("/Users/")
 
-    page.locator("#first-value").fill("4")
-    page.locator("#second-value").fill("6")
-    page.locator("#calculate").click()
-
-    expect(page.locator("#runtime-status")).to_have_text("Calculation complete.")
-    expect(page.locator("#result-summary")).to_contain_text("4 + 6 = 10")
+    page.locator("#alpha").fill("0.05")
+    _calculate(page)
+    expect(page.locator("#result-summary")).to_contain_text("Joint requirement")
 
 
 def test_input_errors_link_to_controls(page: Page, app_url: str) -> None:
     _ready(page, app_url)
-    page.locator("#first-value").fill("")
+    page.locator("#target-true-effect").fill("")
     page.locator("#calculate").click()
 
     expect(page.locator("#error-summary")).to_be_visible()
-    expect(page.locator("#error-summary a")).to_have_attribute("href", "#first-value")
-    expect(page.locator("#first-value")).to_have_attribute("aria-invalid", "true")
+    expect(page.locator("#error-summary a")).to_have_attribute(
+        "href",
+        "#target-true-effect",
+    )
+    expect(page.locator("#target-true-effect")).to_have_attribute(
+        "aria-invalid",
+        "true",
+    )
 
 
-def test_csv_png_and_caption_exports(page: Page, app_url: str, tmp_path: Path) -> None:
+def test_sensitivity_csv_png_and_copy_exports(
+    page: Page,
+    app_url: str,
+    tmp_path: Path,
+) -> None:
     page.context.grant_permissions(
-        ["clipboard-read", "clipboard-write"], origin=app_url.rstrip("/")
+        ["clipboard-read", "clipboard-write"],
+        origin=app_url.rstrip("/"),
     )
     _ready(page, app_url)
-    page.locator("#calculate").click()
-    expect(page.locator("#runtime-status")).to_have_text("Calculation complete.")
+    page.get_by_text("Sensitivity across assumed true effects", exact=True).click()
+    page.locator("#sensitivity-enabled").check()
+    page.locator("#sensitivity-min").fill("0")
+    page.locator("#sensitivity-max").fill("0.4")
+    page.locator("#sensitivity-points").fill("3")
+    _calculate(page)
 
-    with page.expect_download() as csv_info:
-        page.locator("#export-csv").click()
-    csv_download = csv_info.value
-    csv_path = tmp_path / csv_download.suggested_filename
-    csv_download.save_as(csv_path)
-    assert csv_path.read_bytes() == (
-        b"Label,Value\r\nFirst value,2\r\nSecond value,3\r\nDemonstration total,5\r\n"
-    )
+    expect(page.locator("#sensitivity-section")).to_be_visible()
+    expect(page.locator("#sensitivity-table tbody tr")).to_have_count(3)
+    expect(page.locator("#sensitivity-table tbody")).to_contain_text("no finite joint solution")
+
+    with page.expect_download() as scenario_info:
+        page.locator("#export-scenario-csv").click()
+    scenario = scenario_info.value
+    scenario_path = tmp_path / scenario.suggested_filename
+    scenario.save_as(scenario_path)
+    scenario_text = scenario_path.read_text(encoding="utf-8")
+    assert scenario.suggested_filename.endswith("-scenario-targets.csv")
+    assert "required_information_multiplier" in scenario_text
+    assert "Joint mandatory requirement" in scenario_text
+    assert len(scenario_text.splitlines()) == 5
+
+    with page.expect_download() as sensitivity_info:
+        page.locator("#export-sensitivity-csv").click()
+    sensitivity = sensitivity_info.value
+    sensitivity_path = tmp_path / sensitivity.suggested_filename
+    sensitivity.save_as(sensitivity_path)
+    sensitivity_text = sensitivity_path.read_text(encoding="utf-8")
+    assert sensitivity.suggested_filename.endswith("-sensitivity.csv")
+    assert "sensitivity_joint" in sensitivity_text
+    assert len(sensitivity_text.splitlines()) == 13
 
     for selector, suffix in [
         ("#export-figure", "-figure.png"),
-        ("#export-dashboard", "-dashboard.png"),
+        ("#export-dashboard", "-summary.png"),
     ]:
         with page.expect_download(timeout=30_000) as png_info:
             page.locator(selector).click()
@@ -82,31 +131,60 @@ def test_csv_png_and_caption_exports(page: Page, app_url: str, tmp_path: Path) -
         assert download.suggested_filename.endswith(suffix)
         assert png_path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
 
+    page.locator("#copy-reviewer").click()
+    expect(page.locator("#runtime-status")).to_have_text("Reviewer text copied.")
+    assert "formal study-design analysis" in page.evaluate("navigator.clipboard.readText()")
     page.locator("#copy-caption").click()
-    expect(page.locator("#runtime-status")).to_have_text("Caption copied.")
-    clipboard = page.evaluate("navigator.clipboard.readText()")
-    assert "does not implement a scientific method" in clipboard
+    expect(page.locator("#runtime-status")).to_have_text("Figure caption copied.")
+    assert "sensitivity analysis" in page.evaluate("navigator.clipboard.readText()")
 
 
-def test_mobile_keyboard_and_privacy_smoke(page: Page, app_url: str) -> None:
+def test_sample_size_projection_requires_active_opt_in(
+    page: Page,
+    app_url: str,
+) -> None:
+    _ready(page, app_url)
+    expect(page.locator("#current-effective-n")).to_be_disabled()
+    page.get_by_text("Optional approximate sample-size projection", exact=True).click()
+    page.locator("#sample-size-projection-enabled").check()
+    expect(page.locator("#current-effective-n")).to_be_enabled()
+    page.locator("#current-effective-n").fill("100")
+    _calculate(page)
+
+    expect(page.locator("#sample-size-section")).to_be_visible()
+    expect(page.locator("#sample-size-result")).to_contain_text("Approximate required n: 491")
+    expect(page.locator("#sample-size-result")).to_contain_text(
+        "not a design-specific sample-size calculation"
+    )
+
+
+def test_mobile_keyboard_privacy_and_reset_smoke(page: Page, app_url: str) -> None:
     requests: list[tuple[str, str | None]] = []
-    page.context.on("request", lambda request: requests.append((request.url, request.post_data)))
+    page.context.on(
+        "request",
+        lambda request: requests.append((request.url, request.post_data)),
+    )
     page.set_viewport_size({"width": 390, "height": 844})
     _ready(page, app_url)
     initial_url = page.url
-    page.locator("#first-value").fill("12345.67891")
-    page.locator("#second-value").fill("2")
-    page.locator("#first-value").focus()
+    page.locator("#target-true-effect").fill("0.234567891")
+    page.locator("#effect-type").focus()
     page.keyboard.press("Tab")
-    expect(page.locator("#second-value")).to_be_focused()
-    page.locator("#calculate").click()
-    expect(page.locator("#runtime-status")).to_have_text("Calculation complete.")
+    expect(page.locator("input[name='precision_mode']").first).to_be_focused()
+    _calculate(page)
 
     assert page.url == initial_url
     assert page.evaluate("localStorage.length") == 0
     assert page.evaluate("sessionStorage.length") == 0
     assert page.evaluate("document.cookie") == ""
+    assert page.evaluate("document.documentElement.scrollWidth") == page.evaluate(
+        "document.documentElement.clientWidth"
+    )
     serialized_requests = "\n".join(f"{url}\n{body or ''}" for url, body in requests)
-    assert "12345.67891" not in serialized_requests
+    assert "0.234567891" not in serialized_requests
     expect(page.locator(".controls")).to_be_visible()
     expect(page.locator(".results")).to_be_visible()
+
+    page.locator("button[type='reset']").click()
+    expect(page.locator("#result")).to_be_hidden()
+    expect(page.locator("#export-scenario-csv")).to_be_disabled()

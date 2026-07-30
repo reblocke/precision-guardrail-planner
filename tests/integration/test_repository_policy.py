@@ -58,3 +58,22 @@ def test_generated_stage_is_ignored_and_not_tracked() -> None:
         ).stdout
         == ""
     )
+
+
+def test_public_metadata_has_canonical_identity_and_no_author_prompts() -> None:
+    public_files = [
+        PROJECT_ROOT / "README.md",
+        PROJECT_ROOT / "CHANGELOG.md",
+        PROJECT_ROOT / "CITATION.cff",
+        PROJECT_ROOT / "llms.txt",
+        *sorted((PROJECT_ROOT / "docs").glob("*.md")),
+    ]
+    text = "\n".join(path.read_text(encoding="utf-8") for path in public_files)
+
+    assert "AUTHOR ACTION REQUIRED" not in text
+    citation = (PROJECT_ROOT / "CITATION.cff").read_text(encoding="utf-8")
+    assert "family-names: Locke" in citation
+    assert "given-names: Brian" in citation
+    assert "Copyright (c) 2026 Brian Locke" in (PROJECT_ROOT / "LICENSE").read_text(
+        encoding="utf-8"
+    )

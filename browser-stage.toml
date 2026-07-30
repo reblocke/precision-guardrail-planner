@@ -1,23 +1,19 @@
 schema_version = 1
 pyodide_version = "0.29.3"
-pyodide_packages = []
+pyodide_packages = ["numpy", "scipy"]
 
 [[packages]]
 role = "app"
-distribution = "scientific-applet-template-package"
-import_name = "template_applet"
+distribution = "precision-guardrail-planner"
+import_name = "precision_guardrail"
 version = "0.1.0"
 source = "project"
 
-# Add zero or more pure-Python external packages with an exact installed version:
-#
-# [[packages]]
-# role = "core"
-# distribution = "example-scientific-core"
-# import_name = "example_scientific_core"
-# version = "1.2.3"
-# source = "external"
-#
-# For a released wheel, also bind the stage to its locked artifact:
-# artifact_url = "https://github.com/OWNER/REPO/releases/download/v1.2.3/example.whl"
-# artifact_sha256 = "64-lowercase-hex-characters"
+[[packages]]
+role = "core"
+distribution = "wald-inference"
+import_name = "wald_inference"
+version = "0.4.0"
+source = "external"
+artifact_url = "https://github.com/reblocke/wald-inference-core/releases/download/v0.4.0/wald_inference-0.4.0-py3-none-any.whl"
+artifact_sha256 = "401a0cc2a182918764149eb03c79672217b647147c494215c83515fd609c7af6"

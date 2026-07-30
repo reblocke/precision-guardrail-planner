@@ -1,11 +1,11 @@
 {
-  "initialized": false,
+  "initialized": true,
   "schema_version": 1,
   "values": {
-    "app_title": "Scientific Applet Template",
-    "description": "Reusable client-side Python scaffold for a focused scientific applet",
-    "distribution_name": "scientific-applet-template-package",
-    "import_name": "template_applet",
-    "repository_name": "scientific-applet-template"
+    "app_title": "Precision Guardrail Planner",
+    "description": "Joint precision and information guardrail planning under one-parameter Wald models",
+    "distribution_name": "precision-guardrail-planner",
+    "import_name": "precision_guardrail",
+    "repository_name": "precision-guardrail-planner"
   }
 }

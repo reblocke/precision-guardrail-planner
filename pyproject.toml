@@ -1,14 +1,39 @@
 [project]
-name = "scientific-applet-template-package"
+name = "precision-guardrail-planner"
 version = "0.1.0"
-description = "Reusable client-side Python scaffold for a focused scientific applet"
+description = "Joint precision and information guardrail planning under one-parameter Wald models"
 readme = "README.md"
 requires-python = ">=3.12"
 license = { file = "LICENSE" }
 authors = [
   { name = "Brian Locke" },
 ]
-dependencies = []
+maintainers = [
+  { name = "Brian Locke" },
+]
+keywords = [
+  "precision-planning",
+  "type-s-error",
+  "type-m-error",
+  "wald-inference",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+  "Typing :: Typed",
+]
+dependencies = [
+  "wald-inference @ https://github.com/reblocke/wald-inference-core/releases/download/v0.4.0/wald_inference-0.4.0-py3-none-any.whl#sha256=401a0cc2a182918764149eb03c79672217b647147c494215c83515fd609c7af6",
+]
+
+[project.urls]
+Repository = "https://github.com/reblocke/precision-guardrail-planner"
+Issues = "https://github.com/reblocke/precision-guardrail-planner/issues"
+Documentation = "https://github.com/reblocke/precision-guardrail-planner/blob/main/docs/SCIENTIFIC_SCOPE.md"
+Hosted = "https://reblocke.github.io/precision-guardrail-planner/"
 
 [dependency-groups]
 dev = [
@@ -47,4 +72,4 @@ src = ["src", "scripts", "tests"]
 select = ["E", "F", "I", "UP", "B"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["template_applet"]
+known-first-party = ["precision_guardrail"]
