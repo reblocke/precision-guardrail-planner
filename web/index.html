@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Reusable client-side Python scaffold for a focused scientific applet"
+      content="Plan working-scale precision and relative information for selected-claim probability, Type S, and Type M guardrails under one-parameter Wald models."
     />
-    <title>Scientific Applet Template</title>
+    <title>Precision Guardrail Planner</title>
     <link rel="stylesheet" href="./styles.css" />
     <script
       src="https://cdn.plot.ly/plotly-3.1.0.min.js"
@@ -17,17 +17,18 @@
     <script type="module" src="./app.js"></script>
   </head>
   <body>
-    <a class="skip-link" href="#main-content">Skip to applet</a>
+    <a class="skip-link" href="#main-content">Skip to planner</a>
     <header class="site-header">
       <div>
-        <p class="eyebrow">Replace-me demonstration</p>
-        <h1>Scientific Applet Template</h1>
+        <p class="eyebrow">Design-conditioned inverse precision</p>
+        <h1>Precision Guardrail Planner</h1>
         <p>
-          Reusable client-side Python scaffold for a focused scientific applet
+          Find the working-scale standard error and relative information required to meet
+          selected-claim probability, Type S, and Type M guardrails under an assumed true effect.
         </p>
       </div>
       <section class="runtime-card" aria-labelledby="runtime-heading">
-        <h2 id="runtime-heading">Runtime</h2>
+        <h2 id="runtime-heading">Local calculation runtime</h2>
         <p id="runtime-status" role="status" aria-live="polite" data-state="loading">
           Loading the local Python runtime…
         </p>
@@ -40,89 +41,429 @@
 
     <main id="main-content" class="app-shell">
       <aside class="controls" aria-labelledby="controls-heading">
-        <h2 id="controls-heading">Demonstration inputs</h2>
+        <h2 id="controls-heading">Planning assumptions</h2>
         <p class="scope-note">
-          This arithmetic example exists only to prove the template path. Replace it before
-          describing a scientific question.
+          Defaults are an editable synthetic example for regression testing, not recommended
+          scientific guardrails. All results condition on the true effect you enter.
         </p>
         <div id="error-summary" class="error-summary" role="alert" tabindex="-1" hidden>
           <h3>Check the inputs</h3>
           <ul></ul>
         </div>
+
         <form id="applet-form" novalidate>
-          <div class="field">
-            <label for="first-value">First value</label>
-            <input
-              id="first-value"
-              name="first_value"
-              type="text"
-              inputmode="decimal"
-              autocomplete="off"
-              value="2"
-              required
-            />
-          </div>
-          <div class="field">
-            <label for="second-value">Second value</label>
-            <input
-              id="second-value"
-              name="second_value"
-              type="text"
-              inputmode="decimal"
-              autocomplete="off"
-              value="3"
-              required
-            />
-          </div>
+          <fieldset>
+            <legend>Current precision</legend>
+            <div class="field">
+              <label for="effect-type">Effect measure</label>
+              <select id="effect-type" name="effect_type">
+                <optgroup label="Additive measures">
+                  <option value="mean_difference" selected>Mean difference</option>
+                  <option value="risk_difference">Risk difference</option>
+                  <option value="rate_difference">Rate difference</option>
+                  <option value="regression_coefficient">Regression coefficient</option>
+                </optgroup>
+                <optgroup label="Ratio measures">
+                  <option value="odds_ratio">Odds ratio</option>
+                  <option value="risk_ratio">Risk ratio</option>
+                  <option value="hazard_ratio">Hazard ratio</option>
+                  <option value="incidence_rate_ratio">Incidence rate ratio</option>
+                  <option value="ratio_of_means">Ratio of means</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="choice-group" role="radiogroup" aria-labelledby="precision-mode-label">
+              <span id="precision-mode-label" class="field-label">Precision source</span>
+              <label>
+                <input
+                  type="radio"
+                  name="precision_mode"
+                  value="direct_se"
+                  checked
+                />
+                Direct working-scale SE
+              </label>
+              <label>
+                <input type="radio" name="precision_mode" value="ci_95" />
+                Reported 95% CI reconstruction
+              </label>
+            </div>
+
+            <div class="field" data-precision-control="direct_se">
+              <label for="standard-error">Working-scale standard error</label>
+              <input
+                id="standard-error"
+                name="standard_error"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                value="0.15816617164664273"
+              />
+            </div>
+            <div class="two-column" data-precision-control="ci_95">
+              <div class="field">
+                <label for="ci-lower">Lower 95% confidence limit</label>
+                <input
+                  id="ci-lower"
+                  name="ci_lower"
+                  type="text"
+                  inputmode="decimal"
+                  autocomplete="off"
+                  value="0.11"
+                />
+              </div>
+              <div class="field">
+                <label for="ci-upper">Upper 95% confidence limit</label>
+                <input
+                  id="ci-upper"
+                  name="ci_upper"
+                  type="text"
+                  inputmode="decimal"
+                  autocomplete="off"
+                  value="0.73"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label for="null-value">Null value</label>
+              <input
+                id="null-value"
+                name="null_value"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                value="0"
+              />
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Assumed truth and selected-claim rule</legend>
+            <div class="field">
+              <label for="target-true-effect">Assumed true effect</label>
+              <input
+                id="target-true-effect"
+                name="target_true_effect"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                value="0.2"
+              />
+              <small>This is a design assumption, not an estimate or posterior draw.</small>
+            </div>
+            <div class="field">
+              <label for="alpha">Alpha</label>
+              <input
+                id="alpha"
+                name="alpha"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                value="0.05"
+              />
+            </div>
+            <div class="field">
+              <label for="selection-rule">Selected-claim rule</label>
+              <select id="selection-rule" name="selection_rule">
+                <option value="two_sided_p_lt_alpha" selected>
+                  Two-sided p &lt; alpha against the null
+                </option>
+                <option value="one_sided_positive_p_lt_alpha">
+                  One-sided positive p &lt; alpha
+                </option>
+                <option value="one_sided_negative_p_lt_alpha">
+                  One-sided negative p &lt; alpha
+                </option>
+                <option value="ci_excludes_null_in_beneficial_direction">
+                  CI excludes null in selected direction
+                </option>
+                <option value="estimate_exceeds_mcid_and_p_lt_alpha">
+                  Estimate exceeds threshold and two-sided p &lt; alpha
+                </option>
+                <option value="ci_excludes_mcid">
+                  CI excludes claim threshold
+                </option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="claim-direction">Claim direction</label>
+              <select id="claim-direction" name="claim_direction">
+                <option value="positive" selected>Positive</option>
+                <option value="negative">Negative</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="claim-threshold">Claim threshold</label>
+              <input
+                id="claim-threshold"
+                name="claim_threshold"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                value=""
+              />
+              <small>Required only for threshold-based rules and must lie beyond the null.</small>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Mandatory guardrails</legend>
+            <p class="scope-note">Select at least one. Values are editable examples.</p>
+            <div class="guardrail-row">
+              <label>
+                <input
+                  id="target-probability-enabled"
+                  name="target_probability_enabled"
+                  type="checkbox"
+                  checked
+                />
+                Minimum selected-claim probability
+              </label>
+              <input
+                id="minimum-selected-claim-probability"
+                name="minimum_selected_claim_probability"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                value="0.8"
+                aria-label="Minimum selected-claim probability value"
+              />
+            </div>
+            <div class="guardrail-row">
+              <label>
+                <input
+                  id="maximum-type-s-enabled"
+                  name="maximum_type_s_enabled"
+                  type="checkbox"
+                  checked
+                />
+                Maximum Type S
+              </label>
+              <input
+                id="maximum-type-s"
+                name="maximum_type_s"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                value="0.01"
+                aria-label="Maximum Type S value"
+              />
+            </div>
+            <div class="guardrail-row">
+              <label>
+                <input
+                  id="maximum-type-m-enabled"
+                  name="maximum_type_m_enabled"
+                  type="checkbox"
+                  checked
+                />
+                Maximum Type M
+              </label>
+              <input
+                id="maximum-type-m"
+                name="maximum_type_m"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                value="1.25"
+                aria-label="Maximum Type M value"
+              />
+            </div>
+          </fieldset>
+
           <details>
-            <summary>Advanced controls pattern</summary>
-            <p>
-              Put infrequently changed, scientifically justified controls here. This example has
-              no advanced parameter.
+            <summary>Sensitivity across assumed true effects</summary>
+            <label class="check-row">
+              <input id="sensitivity-enabled" name="sensitivity_enabled" type="checkbox" />
+              Evaluate a user-specified plausible range
+            </label>
+            <p class="scope-note">
+              The range is a sensitivity analysis, not a probability distribution.
+            </p>
+            <div class="two-column">
+              <div class="field">
+                <label for="sensitivity-min">Range minimum</label>
+                <input
+                  id="sensitivity-min"
+                  name="sensitivity_min"
+                  type="text"
+                  inputmode="decimal"
+                  autocomplete="off"
+                  value="-0.1"
+                />
+              </div>
+              <div class="field">
+                <label for="sensitivity-max">Range maximum</label>
+                <input
+                  id="sensitivity-max"
+                  name="sensitivity_max"
+                  type="text"
+                  inputmode="decimal"
+                  autocomplete="off"
+                  value="0.5"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label for="sensitivity-points">Grid points (3–101)</label>
+              <input
+                id="sensitivity-points"
+                name="sensitivity_points"
+                type="number"
+                min="3"
+                max="101"
+                step="1"
+                value="19"
+              />
+            </div>
+          </details>
+
+          <details>
+            <summary>Optional approximate sample-size projection</summary>
+            <label class="check-row">
+              <input
+                id="sample-size-projection-enabled"
+                name="sample_size_projection_enabled"
+                type="checkbox"
+              />
+              Assume information is proportional to sample size and all other design features
+              remain unchanged.
+            </label>
+            <div class="field">
+              <label for="current-effective-n">Current effective sample size</label>
+              <input
+                id="current-effective-n"
+                name="current_effective_n"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                value="100"
+              />
+            </div>
+            <p class="scope-note">
+              This optional scaling is approximate. It is not a design-specific sample-size
+              calculation.
             </p>
           </details>
+
           <div class="actions">
-            <button id="calculate" type="submit" disabled>Run demonstration</button>
+            <button id="calculate" type="submit" disabled>Plan precision</button>
             <button type="reset" class="secondary">Reset</button>
           </div>
         </form>
       </aside>
 
       <section class="results" aria-labelledby="results-heading">
-        <h2 id="results-heading">Result</h2>
+        <h2 id="results-heading">Precision requirement</h2>
         <div id="result" hidden>
           <p id="result-summary" class="result-summary" aria-live="polite"></p>
-          <div
-            id="plot"
-            class="plot"
-            role="img"
-            aria-label="Demonstration bar chart; all values are also listed in the table."
-          ></div>
-          <div class="table-wrap">
-            <table id="result-table">
-              <caption>Demonstration values</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Label</th>
-                  <th scope="col">Value</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-          <div class="export-actions" aria-label="Export result">
-            <button id="export-csv" data-export type="button">Download CSV</button>
-            <button id="export-dashboard" data-export type="button">
-              Download dashboard PNG
+          <p id="conditioning-result" class="conditioning"></p>
+
+          <section id="joint-card" class="joint-card" aria-labelledby="joint-heading">
+            <h3 id="joint-heading">Joint result</h3>
+            <p id="joint-status"></p>
+            <dl id="joint-metrics" class="metric-grid"></dl>
+            <p id="joint-note"></p>
+          </section>
+
+          <section aria-labelledby="target-table-heading">
+            <h3 id="target-table-heading">Per-target requirements</h3>
+            <div class="table-wrap">
+              <table id="target-table">
+                <caption>
+                  Each mandatory guardrail solved independently under the same assumptions
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Target</th>
+                    <th scope="col">Requested</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Required SE</th>
+                    <th scope="col">Information multiplier</th>
+                    <th scope="col">Approx. 95% CI width</th>
+                    <th scope="col">Achieved claim probability</th>
+                    <th scope="col">Achieved Type S</th>
+                    <th scope="col">Achieved Type M</th>
+                    <th scope="col">Solver note</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section aria-labelledby="figure-heading">
+            <h3 id="figure-heading">Required relative information</h3>
+            <div
+              id="plot"
+              class="plot"
+              role="img"
+              aria-label="Required relative information by guardrail and assumed true effect; exact values and infeasibility are also provided in tables."
+            ></div>
+            <p id="figure-caption" class="figure-caption"></p>
+          </section>
+
+          <section id="sensitivity-section" aria-labelledby="sensitivity-heading" hidden>
+            <h3 id="sensitivity-heading">Sensitivity results</h3>
+            <p id="sensitivity-note"></p>
+            <div class="table-wrap">
+              <table id="sensitivity-table">
+                <caption>
+                  Joint requirement across the user-specified assumed-effect range
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Assumed true effect</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Joint information multiplier</th>
+                    <th scope="col">Joint required SE</th>
+                    <th scope="col">Binding target(s)</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="sample-size-section" aria-labelledby="sample-size-heading" hidden>
+            <h3 id="sample-size-heading">Approximate sample-size projection</h3>
+            <p id="sample-size-result"></p>
+          </section>
+
+          <section aria-labelledby="reviewer-heading">
+            <h3 id="reviewer-heading">Copyable grant/reviewer text</h3>
+            <label class="visually-hidden" for="reviewer-text">Grant/reviewer text</label>
+            <textarea id="reviewer-text" rows="10" readonly></textarea>
+          </section>
+
+          <section aria-labelledby="warnings-heading">
+            <h3 id="warnings-heading">Assumptions and warnings</h3>
+            <ul id="warnings-list"></ul>
+          </section>
+
+          <div class="export-actions" aria-label="Export results">
+            <button id="export-scenario-csv" data-export type="button">
+              Download scenario/target CSV
+            </button>
+            <button id="export-sensitivity-csv" data-export type="button">
+              Download sensitivity CSV
             </button>
             <button id="export-figure" data-export type="button">
               Download figure PNG
             </button>
-            <button id="copy-caption" type="button">Copy caption</button>
+            <button id="export-dashboard" data-export type="button">
+              Download summary PNG
+            </button>
+            <button id="copy-reviewer" data-copy type="button">Copy reviewer text</button>
+            <button id="copy-caption" data-copy type="button">Copy figure caption</button>
           </div>
         </div>
         <div class="empty-state">
-          <p>Run the demonstration to populate the textual result, plot, table, and exports.</p>
+          <p>
+            Run the planner to see per-target feasibility, the strictest joint requirement,
+            binding constraints, and optional sensitivity and sample-size results.
+          </p>
         </div>
       </section>
     </main>
@@ -130,23 +471,34 @@
     <footer>
       <section>
         <h2>Scope</h2>
-        <p>Engineering scaffold only. No scientific formula or inference claim is included.</p>
+        <p>
+          Educational and research-facing inverse Wald precision planning. This is not a formal
+          study-design calculator, clinical recommendation, or clinical-validation tool.
+        </p>
       </section>
       <section>
         <h2>Privacy</h2>
-        <p>Inputs remain in page and worker memory; there is no backend, telemetry, or storage.</p>
+        <p>
+          Inputs remain in page and worker memory. There is no backend, telemetry, persistence,
+          cookie, upload, or input-bearing URL.
+        </p>
       </section>
       <section>
         <h2>Sources and maintenance</h2>
         <p>
-          <a href="https://github.com/reblocke/scientific-applet-template/blob/main/docs/SCIENTIFIC_SCOPE.md">Scientific scope</a> ·
-          <a href="https://github.com/reblocke/scientific-applet-template/blob/main/docs/PRIVACY.md">Privacy details</a> ·
-          <a href="https://github.com/reblocke/scientific-applet-template">Repository</a> ·
-          <a href="https://github.com/reblocke">Related tools</a>
+          <a href="https://github.com/reblocke/precision-guardrail-planner/blob/main/docs/SCIENTIFIC_SCOPE.md">Scientific scope</a>
+          ·
+          <a href="https://github.com/reblocke/precision-guardrail-planner/blob/main/docs/VALIDATION.md">Validation</a>
+          ·
+          <a href="https://github.com/reblocke/precision-guardrail-planner/blob/main/docs/PRIVACY.md">Privacy</a>
+          ·
+          <a href="https://github.com/reblocke/precision-guardrail-planner">Repository</a>
+          ·
+          <a href="https://reblocke.github.io/wald-inference-tools/">Related focused tools</a>
         </p>
         <p>
-          <span id="core-version">Core: none configured</span> ·
-          <span id="footer-status">template 0.1.0</span>
+          <span id="core-version">Core: loading</span> ·
+          <span id="footer-status">app 0.1.0</span>
         </p>
       </section>
     </footer>

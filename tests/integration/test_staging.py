@@ -4,6 +4,7 @@ import hashlib
 import importlib.metadata
 import json
 import subprocess
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -26,7 +27,7 @@ def test_stage_manifest_records_versions_files_and_hashes(tmp_path: Path) -> Non
     assert json.loads((target / "manifest.json").read_text(encoding="utf-8")) == manifest
     assert manifest["schema_version"] == 1
     assert manifest["pyodide_version"] == "0.29.3"
-    assert manifest["pyodide_packages"] == []
+    assert manifest["pyodide_packages"] == ["numpy", "scipy"]
     assert (
         manifest["source_commit"]
         == subprocess.run(
@@ -37,22 +38,35 @@ def test_stage_manifest_records_versions_files_and_hashes(tmp_path: Path) -> Non
             text=True,
         ).stdout.strip()
     )
-    [package] = manifest["packages"]
-    assert package["role"] == "app"
-    assert package["distribution"] == "scientific-applet-template-package"
-    assert package["import_name"] == "template_applet"
-    assert package["version"] == "0.1.0"
-    assert package["artifact_url"] is None
-    assert package["artifact_sha256"] is None
-    assert package["files"]
+    app, core = manifest["packages"]
+    assert app["role"] == "app"
+    assert app["distribution"] == "precision-guardrail-planner"
+    assert app["import_name"] == "precision_guardrail"
+    assert app["version"] == "0.1.0"
+    assert app["artifact_url"] is None
+    assert app["artifact_sha256"] is None
+    assert app["files"]
+    assert core["role"] == "core"
+    assert core["distribution"] == "wald-inference"
+    assert core["import_name"] == "wald_inference"
+    assert core["version"] == "0.4.0"
+    assert core["artifact_url"].endswith("/v0.4.0/wald_inference-0.4.0-py3-none-any.whl")
+    assert (
+        core["artifact_sha256"]
+        == "401a0cc2a182918764149eb03c79672217b647147c494215c83515fd609c7af6"
+    )
 
-    all_files = package["files"]
+    all_files = app["files"] + core["files"]
     for record in all_files:
         contents = (target / record["path"]).read_bytes()
         assert len(contents) == record["bytes"]
         assert hashlib.sha256(contents).hexdigest() == record["sha256"]
+    for package in (app, core):
+        assert (
+            hashlib.sha256(_descriptor(package["files"]).encode()).hexdigest()
+            == package["package_sha256"]
+        )
     descriptor = _descriptor(all_files)
-    assert hashlib.sha256(descriptor.encode()).hexdigest() == package["package_sha256"]
     assert hashlib.sha256(descriptor.encode()).hexdigest() == manifest["bundle_sha256"]
 
 
@@ -83,26 +97,17 @@ def test_stage_fails_on_configured_version_mismatch(tmp_path: Path) -> None:
         )
 
 
-def test_stage_supports_an_external_locked_pure_python_package(tmp_path: Path) -> None:
-    version = importlib.metadata.version("hypothesis")
-    config = tmp_path / "browser-stage.toml"
-    config.write_text(
-        (PROJECT_ROOT / "browser-stage.toml").read_text(encoding="utf-8")
-        + "\n[[packages]]\n"
-        + 'role = "test-core"\n'
-        + 'distribution = "hypothesis"\n'
-        + 'import_name = "hypothesis"\n'
-        + f'version = "{version}"\n'
-        + 'source = "external"\n',
-        encoding="utf-8",
-    )
+def test_locked_core_distribution_is_the_configured_release_artifact() -> None:
+    distribution = importlib.metadata.distribution("wald-inference")
+    direct_url = json.loads(distribution.read_text("direct_url.json") or "{}")
+    lock = tomllib.loads((PROJECT_ROOT / "uv.lock").read_text(encoding="utf-8"))
+    [package] = [package for package in lock["package"] if package["name"] == "wald-inference"]
 
-    manifest = stage_browser_packages(
-        tmp_path / "py",
-        project_root=PROJECT_ROOT,
-        config_path=config,
-    )
-
-    assert [package["role"] for package in manifest["packages"]] == ["app", "test-core"]
-    assert manifest["packages"][1]["version"] == version
-    assert manifest["packages"][1]["files"]
+    assert distribution.version == "0.4.0"
+    assert direct_url["url"].endswith("/v0.4.0/wald_inference-0.4.0-py3-none-any.whl")
+    assert package["wheels"] == [
+        {
+            "url": direct_url["url"],
+            "hash": ("sha256:401a0cc2a182918764149eb03c79672217b647147c494215c83515fd609c7af6"),
+        }
+    ]

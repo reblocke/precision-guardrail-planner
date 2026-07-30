@@ -49,21 +49,46 @@ def test_ui_contains_accessibility_and_scope_landmarks() -> None:
 
     assert 'aria-live="polite"' in html
     assert 'role="alert"' in html
-    assert re.search(r'<label for="first-value">', html)
-    assert re.search(r'<label for="second-value">', html)
+    assert re.search(r'<label for="effect-type">', html)
+    assert re.search(r'<label for="target-true-effect">', html)
+    assert re.search(r'<label for="selection-rule">', html)
+    assert re.search(r'<label for="claim-threshold">', html)
     assert "<details>" in html and "<summary>" in html
     assert 'class="skip-link"' in html
     assert ":focus-visible" in css
-    assert "No scientific formula or inference claim is included." in html
+    assert "not a formal" in html
+    assert "not a probability distribution" in html
+    assert "not recommended" in html
 
 
-def test_exports_use_explicit_columns_and_separate_png_hooks() -> None:
+def test_exports_use_explicit_columns_and_required_hooks() -> None:
     exports = (WEB_ROOT / "js" / "exports.js").read_text(encoding="utf-8")
 
     assert "csvFromRows(columns, rows)" in exports
-    assert 'key: "label"' in exports
-    assert 'key: "value"' in exports
+    assert 'key: "row_kind"' in exports
+    assert 'key: "required_information_multiplier"' in exports
+    assert "exportScenarioCsv" in exports
+    assert "exportSensitivityCsv" in exports
     assert "exportDashboardPng" in exports
     assert "exportFigurePng" in exports
-    assert "copyCaption" in exports
+    assert "copyText" in exports
     assert "filenameSlug" in exports
+
+
+def test_browser_contract_has_no_formula_or_prohibited_output_panel() -> None:
+    production = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in sorted(WEB_ROOT.rglob("*"))
+        if path.is_file() and "assets/py" not in path.as_posix()
+    ).lower()
+
+    for fragment in [
+        "relative likelihood",
+        "compatibility curve",
+        "s−2",
+        "posterior probability",
+        "full type s/m curve",
+    ]:
+        assert fragment not in production
+    assert "joint_precision_result" not in production
+    assert "precision_sensitivity" not in production

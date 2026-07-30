@@ -27,7 +27,9 @@ a {
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
 }
 
@@ -151,6 +153,7 @@ footer section {
 
 .controls,
 .results {
+  min-width: 0;
   padding: clamp(1rem, 3vw, 1.6rem);
 }
 
@@ -171,11 +174,16 @@ details {
   margin-block: 1rem;
 }
 
-label {
+label,
+.field-label,
+legend {
   font-weight: 750;
 }
 
-input {
+input[type="text"],
+input[type="number"],
+select,
+textarea {
   width: 100%;
   min-height: 2.75rem;
   border: 2px solid var(--border);
@@ -186,6 +194,69 @@ input {
 
 input[aria-invalid="true"] {
   border-color: var(--danger);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: var(--accent-dark);
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  color: var(--muted);
+  background: #edf1f2;
+}
+
+fieldset {
+  margin: 0 0 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  padding: 0.8rem 1rem;
+}
+
+legend {
+  padding-inline: 0.35rem;
+}
+
+small {
+  color: var(--muted);
+}
+
+.choice-group {
+  display: grid;
+  gap: 0.45rem;
+  margin-block: 1rem;
+}
+
+.choice-group label,
+.check-row {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  font-weight: 600;
+}
+
+.two-column {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.guardrail-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7.5rem;
+  gap: 0.8rem;
+  align-items: center;
+  margin-block: 0.75rem;
+}
+
+.guardrail-row label {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
 }
 
 details {
@@ -229,12 +300,45 @@ summary {
   font-weight: 650;
 }
 
+.conditioning {
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+.joint-card {
+  margin-block: 1rem;
+  border: 2px solid var(--accent);
+  border-radius: 0.7rem;
+  padding: 1rem;
+  background: #f7fbfc;
+}
+
+.joint-card[data-status="infeasible"] {
+  border-color: var(--danger);
+  background: #fff5f4;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) minmax(8rem, 1fr);
+  gap: 0.35rem 1rem;
+}
+
+.metric-grid dt {
+  font-weight: 750;
+}
+
+.metric-grid dd {
+  margin: 0;
+}
+
 .plot {
   width: 100%;
-  min-height: 26rem;
+  min-height: 34rem;
 }
 
 .table-wrap {
+  max-width: 100%;
   margin-block: 1rem;
   overflow-x: auto;
 }
@@ -257,6 +361,30 @@ td {
   text-align: left;
 }
 
+tbody tr[data-status="infeasible"],
+tbody tr[data-status="no_finite_joint_solution"] {
+  background: #fff5f4;
+}
+
+textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.figure-caption {
+  color: var(--muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 footer {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -276,11 +404,17 @@ footer h2 {
   .site-header,
   .app-shell,
   footer {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .controls {
     position: static;
+  }
+
+  .two-column,
+  .guardrail-row,
+  .metric-grid {
+    grid-template-columns: 1fr;
   }
 }
 

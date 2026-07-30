@@ -2,10 +2,10 @@
 
 ## Purpose
 
-- This repository is a reusable engineering scaffold for a static, client-side, Python-first
-  scientific applet.
-- It contains no scientific formula. The arithmetic demonstration is conspicuously replaceable.
-- Python under `src/template_applet/` is source of truth; generated browser Python is ignored.
+- This repository is the focused static, client-side inverse Wald precision guardrail planner.
+- Released `wald-inference` is the sole numerical source of truth; do not implement or copy a
+  solver or Type S/M formula locally.
+- Python under `src/precision_guardrail/` is source of truth; generated browser Python is ignored.
 
 ## Commands
 
@@ -23,8 +23,9 @@
 
 - Before non-trivial changes, state assumptions, ambiguities, tradeoffs, success criteria, risks,
   expected files, and verification commands.
-- Keep scientific methods out of the template demonstration. An initialized app must document and
-  validate its own formula authority.
+- Keep local Python limited to validation, Core orchestration, focused response assembly, explicit
+  sample-size opt-in arithmetic, warnings, and exports.
+- Do not add observed compatibility, relative-likelihood, S−2, or full Type S/M outputs.
 - Run staging; never hand-edit `web/assets/py/`.
 - Keep external scientific dependencies exact-version locked and, for URL artifacts, checksum
   bound in package metadata, `uv.lock`, and `browser-stage.toml`.
@@ -42,8 +43,8 @@
 
 ## Done criteria
 
-- Relevant unit, contract, property, initializer, staging, privacy, Chromium, and WebKit checks
-  pass.
+- Relevant unit, contract, property, scientific-reference, regression, staging, privacy,
+  Chromium, and WebKit checks pass.
 - Stage output is reproducible from a clean checkout without a sibling repository.
 - Scientific scope, validation, privacy, citation, maintenance, and decisions are truthful.
 - The final report names commands, results, generated files, limitations, and residual risks.
