@@ -178,6 +178,18 @@ See [scientific scope](docs/SCIENTIFIC_SCOPE.md),
 [runtime provenance](docs/RUNTIME_DEPENDENCIES.md), and
 [migration provenance](docs/MIGRATION_PROVENANCE.md).
 
+## Related Wald tools
+
+- Choose a tool: [Wald inference tools catalog](https://reblocke.github.io/wald-inference-tools/).
+- Closest adjacent tool:
+  [Type S/M Calibrator](https://reblocke.github.io/type-s-m-calibrator/).
+- [Integrated workbench](https://reblocke.github.io/conf_curve_likelihood/).
+- [Precision Guardrail Planner repository](https://github.com/reblocke/precision-guardrail-planner).
+- Numerical core:
+  [`wald-inference` v0.4.0](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.0).
+- Privacy: calculations stay in the browser and entered values are not persisted or transmitted;
+  see the [privacy note](docs/PRIVACY.md).
+
 ## Privacy
 
 The app is static and client-side. It has no backend, telemetry, analytics, browser storage,
