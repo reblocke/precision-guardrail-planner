@@ -5,14 +5,14 @@ Reviewed/retrieved 2026-07-30.
 ## Scientific numerical Core
 
 - Distribution/import: `wald-inference` / `wald_inference`
-- Version: `0.4.0`
+- Version: `0.4.1`
 - Repository: <https://github.com/reblocke/wald-inference-core>
-- Release: <https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.0>
-- Release tag/merge target: `fd7b24740122bed7ae07769674732c5e56c91277`
+- Release: <https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.1>
+- Release tag/merge target: `f4613177b6dc81d194aa70762152de2bfa86663b`
 - Wheel:
-  <https://github.com/reblocke/wald-inference-core/releases/download/v0.4.0/wald_inference-0.4.0-py3-none-any.whl>
+  <https://github.com/reblocke/wald-inference-core/releases/download/v0.4.1/wald_inference-0.4.1-py3-none-any.whl>
 - Wheel SHA-256:
-  `401a0cc2a182918764149eb03c79672217b647147c494215c83515fd609c7af6`
+  `d7272023f65088729d3ff997cab7cac57b84f22ac6108244ec2170434557d99b`
 - License: MIT
 - Role: sole numerical authority for effect conversion, CI reconstruction, selected-claim
   semantics, forward Type S/M metrics, per-target precision inversion, joint solution, and

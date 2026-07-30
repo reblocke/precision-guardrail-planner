@@ -4,7 +4,7 @@ Purpose: inverse working-scale precision and relative-information planning under
 one-parameter Wald model, conditional on a user-specified true effect and selected-claim rule.
 
 Numerical authority:
-- `wald-inference` 0.4.0 is the sole authority for effect conversion, CI reconstruction,
+- `wald-inference` 0.4.1 is the sole authority for effect conversion, CI reconstruction,
   selected-claim rules, forward Type S/M metrics, target inversion, joint results, and
   sensitivity.
 - The exact release wheel and SHA-256 are recorded in `browser-stage.toml`,
