@@ -93,8 +93,8 @@ async function startRuntime() {
       (entry) => entry.distribution === "wald-inference",
     );
     document.querySelector("#core-version").textContent = core
-      ? `Core: wald-inference ${core.version}`
-      : "Core: unavailable";
+      ? `wald-inference Core v${core.version}`
+      : "wald-inference Core unavailable";
     runtimeReady = true;
     calculateButton.disabled = false;
     setStatus(status, "Ready. Calculations stay in this browser.", "ready");
