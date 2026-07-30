@@ -2,7 +2,7 @@
 
 ## Status and ownership
 
-Status: active experimental research software, version 0.1.0.
+Status: active experimental research software, version 0.1.1.
 
 Maintainer: Brian Locke (`@reblocke`). Use repository issues and reviewed pull requests for public
 coordination. Scientific-meaning, Core-adoption, privacy, accessibility, and release changes

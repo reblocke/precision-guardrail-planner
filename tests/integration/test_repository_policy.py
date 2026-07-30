@@ -86,5 +86,5 @@ def test_readme_related_tools_has_catalog_core_marker() -> None:
         maxsplit=1,
     )[0]
 
-    assert "wald-inference Core v0.4.0" in related
-    assert "https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.0" in related
+    assert "wald-inference Core v0.4.1" in related
+    assert "https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.1" in related

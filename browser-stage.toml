@@ -6,14 +6,14 @@ pyodide_packages = ["numpy", "scipy"]
 role = "app"
 distribution = "precision-guardrail-planner"
 import_name = "precision_guardrail"
-version = "0.1.0"
+version = "0.1.1"
 source = "project"
 
 [[packages]]
 role = "core"
 distribution = "wald-inference"
 import_name = "wald_inference"
-version = "0.4.0"
+version = "0.4.1"
 source = "external"
-artifact_url = "https://github.com/reblocke/wald-inference-core/releases/download/v0.4.0/wald_inference-0.4.0-py3-none-any.whl"
-artifact_sha256 = "401a0cc2a182918764149eb03c79672217b647147c494215c83515fd609c7af6"
+artifact_url = "https://github.com/reblocke/wald-inference-core/releases/download/v0.4.1/wald_inference-0.4.1-py3-none-any.whl"
+artifact_sha256 = "d7272023f65088729d3ff997cab7cac57b84f22ac6108244ec2170434557d99b"

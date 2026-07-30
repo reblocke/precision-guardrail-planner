@@ -1,6 +1,6 @@
 [project]
 name = "precision-guardrail-planner"
-version = "0.1.0"
+version = "0.1.1"
 description = "Joint precision and information guardrail planning under one-parameter Wald models"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -26,7 +26,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "wald-inference @ https://github.com/reblocke/wald-inference-core/releases/download/v0.4.0/wald_inference-0.4.0-py3-none-any.whl#sha256=401a0cc2a182918764149eb03c79672217b647147c494215c83515fd609c7af6",
+  "wald-inference @ https://github.com/reblocke/wald-inference-core/releases/download/v0.4.1/wald_inference-0.4.1-py3-none-any.whl#sha256=d7272023f65088729d3ff997cab7cac57b84f22ac6108244ec2170434557d99b",
 ]
 
 [project.urls]

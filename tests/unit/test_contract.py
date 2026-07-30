@@ -35,7 +35,7 @@ def test_focused_contract_has_exact_sections_and_b06_values(
         "sample_size_projection_optional",
         "warnings",
     ]
-    assert response["meta"]["core_version"] == "0.4.0"
+    assert response["meta"]["core_version"] == "0.4.1"
     assert [row["target_key"] for row in response["per_target_results"]] == [
         "Power",
         "Maximum Type S",

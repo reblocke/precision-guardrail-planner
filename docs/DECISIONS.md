@@ -1,5 +1,12 @@
 # Decisions
 
+## 2026-07-30 — Core 0.4.1 replaces Core 0.4.0
+
+The app pins the exact Core 0.4.1 release wheel by URL and SHA-256. This patch repairs
+non-monotone threshold precision bracketing, exact pairwise support ratios, and strict ratio-scale
+underflow validation in the numerical authority. The app continues to delegate all formulas and
+solvers to Core.
+
 ## 2026-07-30 — Released Core 0.4.0 is the numerical authority
 
 The app pins the exact Core 0.4.0 release wheel by URL and SHA-256. All effect conversions, CI

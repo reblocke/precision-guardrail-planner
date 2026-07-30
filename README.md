@@ -89,12 +89,12 @@ censoring, covariate adjustment, finite populations, or any other design-specifi
 The app does not implement a Wald solver. All effect conversion, CI reconstruction, selected
 claim semantics, forward Type S/M metrics, per-target inversion, joint solution, and sensitivity
 results come from the exact released
-[`wald-inference` 0.4.0](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.0)
+[`wald-inference` 0.4.1](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.1)
 wheel:
 
 ```text
-https://github.com/reblocke/wald-inference-core/releases/download/v0.4.0/wald_inference-0.4.0-py3-none-any.whl
-SHA-256 401a0cc2a182918764149eb03c79672217b647147c494215c83515fd609c7af6
+https://github.com/reblocke/wald-inference-core/releases/download/v0.4.1/wald_inference-0.4.1-py3-none-any.whl
+SHA-256 d7272023f65088729d3ff997cab7cac57b84f22ac6108244ec2170434557d99b
 ```
 
 The local `precision_guardrail` package owns only strict request validation, natural/working-scale
@@ -186,7 +186,7 @@ See [scientific scope](docs/SCIENTIFIC_SCOPE.md),
 - [Integrated workbench](https://reblocke.github.io/conf_curve_likelihood/).
 - [Precision Guardrail Planner repository](https://github.com/reblocke/precision-guardrail-planner).
 - Numerical core:
-  [wald-inference Core v0.4.0](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.0).
+  [wald-inference Core v0.4.1](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.1).
 - Privacy: calculations stay in the browser and entered values are not persisted or transmitted;
   see the [privacy note](docs/PRIVACY.md).
 
