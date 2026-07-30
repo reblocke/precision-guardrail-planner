@@ -186,7 +186,7 @@ See [scientific scope](docs/SCIENTIFIC_SCOPE.md),
 - [Integrated workbench](https://reblocke.github.io/conf_curve_likelihood/).
 - [Precision Guardrail Planner repository](https://github.com/reblocke/precision-guardrail-planner).
 - Numerical core:
-  [`wald-inference` v0.4.0](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.0).
+  [wald-inference Core v0.4.0](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.0).
 - Privacy: calculations stay in the browser and entered values are not persisted or transmitted;
   see the [privacy note](docs/PRIVACY.md).
 
