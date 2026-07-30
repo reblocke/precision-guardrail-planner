@@ -77,3 +77,14 @@ def test_public_metadata_has_canonical_identity_and_no_author_prompts() -> None:
     assert "Copyright (c) 2026 Brian Locke" in (PROJECT_ROOT / "LICENSE").read_text(
         encoding="utf-8"
     )
+
+
+def test_readme_related_tools_has_catalog_core_marker() -> None:
+    readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
+    related = readme.split("## Related Wald tools", maxsplit=1)[1].split(
+        "\n## ",
+        maxsplit=1,
+    )[0]
+
+    assert "wald-inference Core v0.4.0" in related
+    assert "https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.0" in related
