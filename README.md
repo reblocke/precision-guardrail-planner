@@ -15,6 +15,11 @@ It is an educational and research-facing inverse-precision tool for one-paramete
 It is not a formal study-design calculator, a clinical recommendation, or evidence that a target
 effect is clinically validated.
 
+> **Release metadata:** Current app version: `0.1.2`.
+> Release maturity: experimental software. GitHub publication state is recorded on the versioned release page:
+> <https://github.com/reblocke/precision-guardrail-planner/releases/tag/v0.1.2>.
+> Cite the exact tagged software release or commit used; see [CITATION.cff](CITATION.cff).
+
 ## What it reports
 
 For every selected mandatory guardrail, the app reports:
