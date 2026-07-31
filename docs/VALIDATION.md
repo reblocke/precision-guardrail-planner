@@ -85,9 +85,22 @@ any entered guardrail/threshold.
 For each release record:
 
 - exact reviewed merge commit and annotated tag target;
+- exact equality between the version tag and authoritative project version;
+- GitHub verification of the signed annotated tag and its remote tag-object identity;
+- containment of the verified tag target in protected `main` history before repository code;
 - locked Core wheel URL/SHA-256 and generated stage manifest hash;
 - unit/property/scientific-reference/regression counts;
 - Chromium and WebKit results;
 - deterministic source/archive checksums;
+- locally built and re-downloaded draft-body and asset comparison;
+- nonempty release notes extracted only from the tagged version's changelog section;
+- exact GitHub CLI archive version and checksum;
+- published stable-release immutability;
 - hosted Pages smoke, input recovery, privacy/network, keyboard/focus, and export results;
 - skipped checks and remaining limitations.
+
+Repository-policy tests also verify full-SHA Action pins with version comments, checkout credential
+isolation, least-privilege workflow permissions, release-cache disablement, protected-main and
+signed-tag gates, checksummed GitHub CLI installation, exact draft verification, stable
+publication ordering, Dependabot coverage, and private-reporting guidance. These checks establish
+engineering policy, not scientific, study-design, clinical, or regulatory validity.

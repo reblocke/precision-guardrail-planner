@@ -35,3 +35,8 @@ where those outputs go; the app does not upload or retain them.
 
 Any future proposal for storage, server processing, analytics, sharing, or upload must stop for a
 new documented review of data path, retention, access, security, and compliance.
+
+Public issues and pull requests must not contain protected health information, patient-level data,
+credentials, restricted material, sensitive input values, or unredacted local logs. Report a
+privacy or security defect through the private process in [SECURITY.md](../SECURITY.md), using only
+the smallest synthetic reproduction needed.
