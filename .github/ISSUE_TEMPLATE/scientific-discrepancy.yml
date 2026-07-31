@@ -1,0 +1,55 @@
+name: Scientific discrepancy
+description: Report a reproducible inverse-precision result or interpretation discrepancy using synthetic values.
+title: "[Scientific discrepancy]: "
+labels:
+  - scientific-review
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This app answers a design-conditioned inverse precision and information-guardrail
+        question. Use synthetic aggregate values and identify whether the suspected defect belongs
+        to the released `wald-inference-core` numerical authority or this app's focused assembly,
+        presentation, or explicitly opted-in arithmetic sample-size projection. Do not include
+        protected health information, patient-level data, credentials, restricted material, or a
+        request for clinical advice or study-design advice.
+  - type: input
+    id: version
+    attributes:
+      label: Exact app and Core versions
+      placeholder: precision-guardrail-planner v0.1.2; wald-inference v0.4.1
+    validations:
+      required: true
+  - type: dropdown
+    id: ownership
+    attributes:
+      label: Suspected owner
+      options:
+        - wald-inference-core numerical primitive
+        - precision-guardrail-planner request, response, display, warning, serialization, or export
+        - Unknown
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal synthetic reproduction
+      description: Include effect type, current synthetic SE or CI, assumed true effect, selected-claim rule, guardrails, and exact command or UI sequence.
+    validations:
+      required: true
+  - type: textarea
+    id: authority
+    attributes:
+      label: Expected result and authority
+      description: State the expected result, tolerance, and authoritative release, fixture, or method reference.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Scope and public-report safety
+      options:
+        - label: I used only synthetic aggregate values and removed sensitive data and protected health information.
+          required: true
+        - label: This report does not request clinical or study-design advice or propose an out-of-scope calculation.
+          required: true

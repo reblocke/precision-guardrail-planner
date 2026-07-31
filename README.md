@@ -15,6 +15,12 @@ It is an educational and research-facing inverse-precision tool for one-paramete
 It is not a formal study-design calculator, a clinical recommendation, or evidence that a target
 effect is clinically validated.
 
+Public engineering, scientific-boundary, and accessibility reports use the scoped issue forms in
+`.github/`. Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md); never put
+protected health information, credentials, restricted data, or sensitive values in a public
+report. Contribution and release requirements are documented in
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
 > **Release metadata:** Current app version: `0.1.2`.
 > Release maturity: experimental software. GitHub publication state is recorded on the versioned release page:
 > <https://github.com/reblocke/precision-guardrail-planner/releases/tag/v0.1.2>.
@@ -170,6 +176,16 @@ uv run pytest -q tests/scientific_reference/ tests/regression/
 git diff --check
 git status --short
 ```
+
+A new version is published only from a signed annotated tag whose commit is already contained in
+protected `main`. The release workflow verifies the tag before executing repository code, reruns
+the complete suite with read-only contents permission, builds a deterministic source archive,
+browser-stage manifest, and checksums, and transfers them to a narrowly write-enabled publishing
+job. That job requires repository release immutability through the
+`RELEASE_SETTINGS_READ_TOKEN` Actions secret, creates one draft stable release, re-downloads and
+compares the exact release body and every asset, and publishes only the verified draft.
+Credentialed commands use an exact checksummed GitHub CLI. Release notes contain only the tagged
+version's nonempty changelog section.
 
 The suite covers the frozen integrated B06/B07 baseline values, all six claim rules, current
 sufficiency, strictness/ties, infeasibility, near-null behavior, threshold unattainability,

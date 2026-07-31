@@ -36,8 +36,21 @@ the CDNs. No runtime package is fetched from a sibling repository.
 ## Development/runtime lock
 
 `uv.lock` controls exact local/CI resolution. Developer tools include pytest, Hypothesis, Ruff,
-Playwright, and pytest-playwright. GitHub Actions are pinned to major action versions in workflow
-files and reviewed through normal dependency maintenance.
+Playwright, and pytest-playwright.
+
+## Repository automation
+
+Every third-party GitHub Action is pinned to a reviewed full commit SHA with a human-readable
+version comment. Dependabot proposes grouped weekly updates for both `uv` dependencies and Action
+pins. An update remains a reviewed source and supply-chain change: inspect upstream release notes,
+confirm the referenced commit belongs to the stated release, and rerun the full suite before
+merging. Dependency automation does not authorize a new scientific core, an out-of-scope feature,
+or automatic merging.
+
+The release workflow downloads GitHub CLI `2.93.0` from its upstream release and verifies the
+Linux AMD64 archive against SHA-256
+`02d1290eba130e0b896f3709ffff22e1c75a51475ddb70476a85abc6b5807af0` before any credentialed
+command. That build-time tool is not part of the static application's browser runtime.
 
 ## Licenses
 

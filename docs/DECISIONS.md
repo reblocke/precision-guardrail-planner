@@ -1,5 +1,28 @@
 # Decisions
 
+## 2026-07-30 — Fail-closed repository and release governance
+
+Third-party GitHub Actions are content-addressed by full commit SHA and receive grouped,
+review-only Dependabot proposals. Ordinary CI has explicit read-only contents permission; Pages
+and release jobs receive only their required writes. Checkout credentials are not persisted, and
+the release-artifact build disables shared dependency caching.
+
+A release requires a GitHub-verified signed annotated tag and enabled repository release
+immutability. The tag must equal `v` plus the authoritative project version. Before isolated
+version parsing or repository code execution, the workflow binds the remote tag object to the
+event commit and requires that commit to be contained in protected `main` history. It then builds
+and checksums all assets, extracts a nonempty body from only that version's changelog section,
+transfers the complete bundle to a separate publishing job, creates a draft stable release,
+re-downloads and compares every draft asset and its body, and publishes only after exact
+verification. Credentialed release commands use an exact checksummed GitHub CLI; the
+pre-publication immutability query uses a dedicated administration-read Actions secret. A failed
+run leaves an inspectable draft rather than an incompletely published release.
+
+Private vulnerability reporting is the disclosure path. Public issue forms explicitly exclude
+credentials, restricted data, sensitive user values, and protected health information. These
+governance changes do not alter the app version, numerical authority, browser contract,
+design-conditioned inverse-precision semantics, or explicit sample-size opt-in.
+
 ## 2026-07-30 — Core 0.4.1 replaces Core 0.4.0
 
 The app pins the exact Core 0.4.1 release wheel by URL and SHA-256. This patch repairs
