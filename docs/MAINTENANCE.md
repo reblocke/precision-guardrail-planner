@@ -29,28 +29,33 @@ Do not adopt an unreleased sibling checkout or hand-copy a missing Core primitiv
 ## Release
 
 Use a reviewed pull request and expected-head merge. Confirm local full verification, CI, and
-hosted Pages, then create a signed annotated semantic-version tag on the exact merge commit.
+hosted Pages, then create an annotated semantic-version tag on the exact merge commit.
 
-The release workflow verifies the signature and remote tag object before it executes repository
-code. It requires the event commit to be contained in protected `main`, parses the project version
+The release workflow verifies the annotated remote tag object and its binding to the event commit
+before it executes repository code. It requires that commit to be contained in protected `main`,
+parses the project version
 with isolated Python, reruns the complete suite under read-only contents permission, disables the
 shared dependency cache for the release build, and creates the deterministic source archive,
 browser-stage manifest, and SHA-256 checksums before a release exists. A separate job with narrowly
-scoped contents-write permission uses an exact checksummed GitHub CLI, requires repository release
-immutability through the `RELEASE_SETTINGS_READ_TOKEN` Actions secret, creates a draft stable
-release with every asset, re-downloads and compares the draft assets and release body, then
-publishes only the verified draft. The tag must equal `v` plus the authoritative project version,
-and the public release body contains only that version's nonempty changelog section.
+scoped contents-write permission uses an exact checksummed GitHub CLI and the job-scoped GitHub
+token to create a draft stable release with every asset, re-downloads and compares the draft assets
+and release body, publishes only the verified draft, then requires the published release to report
+immutable and independently verifies every asset. The tag must equal `v` plus the authoritative
+project version, and the public release body contains only that version's nonempty changelog
+section.
 
-If the workflow fails after draft creation, retain the draft for inspection. Repair the workflow
-and create a new tag only after the failure is understood; never move a published tag or replace a
-published asset. Publish once into the intended stable lifecycle state only after hosted Pages and
-portfolio-level validation are complete.
+If the workflow fails while the release remains a draft, retain the draft for inspection. If a
+post-publication verification fails, preserve the published artifacts and investigate the release
+state. Repair the workflow and create a new tag only after the failure is understood; never move a
+published tag or replace a published asset. Publish once into the intended stable lifecycle state
+only after hosted Pages and portfolio-level validation are complete.
 
 Repository settings must retain read-only default workflow permissions, protect `main` and `v*`
 tags, enable private vulnerability reporting and Dependabot security updates, and enable immutable
-releases before the next tag is created. Store a repository-administration read token as the
-`RELEASE_SETTINGS_READ_TOKEN` Actions secret so the workflow can fail closed before publication.
+releases before the next tag is created. Release automation requires no external release
+credential; all credentialed GitHub commands use the job-scoped GitHub token. Because the workflow
+verifies immutability after publication rather than querying the setting beforehand, confirm this
+repository setting before creating the tag.
 
 ## Deprecation
 

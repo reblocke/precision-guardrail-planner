@@ -7,11 +7,12 @@ All notable changes use a release-oriented record here. This repository follows
 
 - Harden CI, Pages, and release automation with least-privilege permissions, full-SHA Action pins,
   checkout credential isolation, and disabled dependency caching for release artifacts.
-- Require a GitHub-verified signed annotated tag on protected `main`, bound to the event commit and
-  authoritative project version before repository code is executed.
-- Install an exact checksummed GitHub CLI, require repository immutability through a dedicated
-  administration-read secret, and verify the complete draft body and asset set before one-time
-  stable publication.
+- Require an annotated tag whose exact remote tag object is bound to the event commit on protected
+  `main` and the authoritative project version before repository code is executed, without making
+  GitHub signature verification a release gate.
+- Use only the job-scoped GitHub token for remote tag and release operations; remove the external
+  settings credential and prepublication immutable-settings query while retaining exact draft
+  body/asset comparison and post-publication immutable-release and asset verification.
 - Add grouped weekly Dependabot proposals, private vulnerability reporting guidance, contribution
   policy, scoped issue forms, a pull-request checklist, and repository-policy regressions.
 - Preserve version `0.1.2`, the exact `wald-inference` v0.4.1 wheel and checksum, every inverse
