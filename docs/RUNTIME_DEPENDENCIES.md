@@ -1,18 +1,18 @@
 # Runtime Dependencies and Provenance
 
-Reviewed/retrieved 2026-07-30.
+Reviewed/retrieved 2026-07-31.
 
 ## Scientific numerical Core
 
 - Distribution/import: `wald-inference` / `wald_inference`
-- Version: `0.4.1`
+- Version: `0.4.2`
 - Repository: <https://github.com/reblocke/wald-inference-core>
-- Release: <https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.1>
-- Release tag/merge target: `f4613177b6dc81d194aa70762152de2bfa86663b`
+- Release: <https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.2>
+- Release tag/merge target: `8afd0a463cc1d2586b8ce5cf92f40900647c3190`
 - Wheel:
-  <https://github.com/reblocke/wald-inference-core/releases/download/v0.4.1/wald_inference-0.4.1-py3-none-any.whl>
+  <https://github.com/reblocke/wald-inference-core/releases/download/v0.4.2/wald_inference-0.4.2-py3-none-any.whl>
 - Wheel SHA-256:
-  `d7272023f65088729d3ff997cab7cac57b84f22ac6108244ec2170434557d99b`
+  `225331d7b9d7b70e2508eecb92851a92a8c4e245baf412a1eb0f464d85da1349`
 - License: MIT
 - Role: sole numerical authority for effect conversion, CI reconstruction, selected-claim
   semantics, forward Type S/M metrics, per-target precision inversion, joint solution, and
@@ -21,6 +21,11 @@ Reviewed/retrieved 2026-07-30.
 The URL and checksum are repeated in `pyproject.toml`, `uv.lock`, and `browser-stage.toml`.
 Staging verifies installed direct-URL provenance plus every external package file against wheel
 `RECORD` hashes.
+
+The upstream 0.4.2 changelog, immutable release metadata, and hosted wheel checksum were reviewed
+before adoption. Core 0.4.2 changes governance and release controls only and explicitly preserves
+every numerical formula, public API, tolerance, dependency resolution, and frozen baseline value.
+The numerical repairs first adopted from Core 0.4.1 remain unchanged.
 
 ## Browser runtime
 

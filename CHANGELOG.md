@@ -5,6 +5,8 @@ All notable changes use a release-oriented record here. This repository follows
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-07-31
+
 - Harden CI, Pages, and release automation with least-privilege permissions, full-SHA Action pins,
   checkout credential isolation, and disabled dependency caching for release artifacts.
 - Require an annotated tag whose exact remote tag object is bound to the event commit on protected
@@ -15,8 +17,10 @@ All notable changes use a release-oriented record here. This repository follows
   body/asset comparison and post-publication immutable-release and asset verification.
 - Add grouped weekly Dependabot proposals, private vulnerability reporting guidance, contribution
   policy, scoped issue forms, a pull-request checklist, and repository-policy regressions.
-- Preserve version `0.1.2`, the exact `wald-inference` v0.4.1 wheel and checksum, every inverse
-  precision and browser contract, the app's negative scope, and the client-side privacy boundary.
+- Adopt the exact immutable `wald-inference` v0.4.2 wheel and checksum in package metadata, the
+  lockfile, browser staging, runtime copy, and validation contracts. Core v0.4.2 changes governance
+  and release controls only; every inverse-precision and browser contract, the app's negative scope,
+  and the client-side privacy boundary remain unchanged.
 
 ## [0.1.2] - 2026-07-30
 
@@ -51,7 +55,8 @@ All notable changes use a release-oriented record here. This repository follows
 - Added B06/B07 migration regression tests, scientific invariants, all-rule coverage, Chromium and
   WebKit checks, privacy/accessibility checks, and deterministic browser staging.
 
-[Unreleased]: https://github.com/reblocke/precision-guardrail-planner/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/reblocke/precision-guardrail-planner/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/reblocke/precision-guardrail-planner/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/reblocke/precision-guardrail-planner/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/reblocke/precision-guardrail-planner/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/reblocke/precision-guardrail-planner/releases/tag/v0.1.0

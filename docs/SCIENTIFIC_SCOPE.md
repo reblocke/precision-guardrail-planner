@@ -22,7 +22,7 @@ evidence that an entered effect is a clinically validated target or MCID.
 - **Assumed true effect:** finite, and positive for ratio measures. Every output is conditional
   on this user-specified design assumption.
 - **Alpha:** strictly between zero and one.
-- **Selected-claim rule:** one of the six rules released in Core 0.4.1.
+- **Selected-claim rule:** one of the six rules released in Core 0.4.2.
 - **Claim direction:** positive or negative; material for directional and threshold rules.
 - **Claim threshold:** required for threshold rules and beyond the null in the selected direction.
 - **Guardrails:** at least one minimum selected-claim probability in `(0,1)`, maximum Type S in
@@ -60,7 +60,7 @@ clearly labeled approximate and non-design-specific.
 ## Formula authority
 
 Released
-[`wald-inference` 0.4.1](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.1)
+[`wald-inference` 0.4.2](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.2)
 is the sole authority for:
 
 - natural/working-scale effect conversion;

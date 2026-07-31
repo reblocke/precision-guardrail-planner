@@ -499,7 +499,7 @@ def calculate(request: PlanningRequest) -> PlanningResponse:
                 "the selected mandatory guardrails?"
             ),
             "numerical_authority": (
-                "wald-inference 0.4.1 joint_precision_result and precision_sensitivity"
+                "wald-inference 0.4.2 joint_precision_result and precision_sensitivity"
             ),
             "scope": "inverse_precision_guardrails_only",
         },

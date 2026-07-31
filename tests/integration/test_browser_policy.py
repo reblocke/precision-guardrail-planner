@@ -65,9 +65,9 @@ def test_footer_core_marker_is_static_and_persists_after_runtime_load() -> None:
     html = (WEB_ROOT / "index.html").read_text(encoding="utf-8")
     app = (WEB_ROOT / "app.js").read_text(encoding="utf-8")
 
-    assert "wald-inference Core v0.4.1" in html
+    assert "wald-inference Core v0.4.2" in html
     assert "`wald-inference Core v${core.version}`" in app
-    assert 'href="https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.1"' in html
+    assert 'href="https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.2"' in html
 
 
 def test_exports_use_explicit_columns_and_required_hooks() -> None:

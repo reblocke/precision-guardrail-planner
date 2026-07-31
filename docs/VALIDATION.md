@@ -2,7 +2,7 @@
 
 ## Authority and migration baseline
 
-Core 0.4.1 owns all numerical methods. The app regression fixture
+Core 0.4.2 owns all numerical methods. The app regression fixture
 `tests/fixtures/integrated_baseline/precision_b06_b07.json` contains only the B06/B07 core-owned
 precision subset from:
 
@@ -52,7 +52,7 @@ provenance, deterministic restaging, stale-file removal, and ignored generated o
 
 Chromium tests cover:
 
-- Core 0.4.1 load and default joint result;
+- Core 0.4.2 load and default joint result;
 - textual per-target/joint results and plot;
 - safe validation error without traceback/path leakage and successful recovery;
 - linked field errors;
