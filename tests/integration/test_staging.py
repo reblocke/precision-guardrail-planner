@@ -42,18 +42,18 @@ def test_stage_manifest_records_versions_files_and_hashes(tmp_path: Path) -> Non
     assert app["role"] == "app"
     assert app["distribution"] == "precision-guardrail-planner"
     assert app["import_name"] == "precision_guardrail"
-    assert app["version"] == "0.1.2"
+    assert app["version"] == "0.1.3"
     assert app["artifact_url"] is None
     assert app["artifact_sha256"] is None
     assert app["files"]
     assert core["role"] == "core"
     assert core["distribution"] == "wald-inference"
     assert core["import_name"] == "wald_inference"
-    assert core["version"] == "0.4.1"
-    assert core["artifact_url"].endswith("/v0.4.1/wald_inference-0.4.1-py3-none-any.whl")
+    assert core["version"] == "0.4.2"
+    assert core["artifact_url"].endswith("/v0.4.2/wald_inference-0.4.2-py3-none-any.whl")
     assert (
         core["artifact_sha256"]
-        == "d7272023f65088729d3ff997cab7cac57b84f22ac6108244ec2170434557d99b"
+        == "225331d7b9d7b70e2508eecb92851a92a8c4e245baf412a1eb0f464d85da1349"
     )
 
     all_files = app["files"] + core["files"]
@@ -87,7 +87,7 @@ def test_stage_is_deterministic_and_removes_stale_files(tmp_path: Path) -> None:
 def test_stage_fails_on_configured_version_mismatch(tmp_path: Path) -> None:
     config = tmp_path / "browser-stage.toml"
     source = (PROJECT_ROOT / "browser-stage.toml").read_text(encoding="utf-8")
-    config.write_text(source.replace('version = "0.1.2"', 'version = "9.9.9"'), encoding="utf-8")
+    config.write_text(source.replace('version = "0.1.3"', 'version = "9.9.9"'), encoding="utf-8")
 
     with pytest.raises(StagingError, match="expected '9.9.9'"):
         stage_browser_packages(
@@ -103,11 +103,11 @@ def test_locked_core_distribution_is_the_configured_release_artifact() -> None:
     lock = tomllib.loads((PROJECT_ROOT / "uv.lock").read_text(encoding="utf-8"))
     [package] = [package for package in lock["package"] if package["name"] == "wald-inference"]
 
-    assert distribution.version == "0.4.1"
-    assert direct_url["url"].endswith("/v0.4.1/wald_inference-0.4.1-py3-none-any.whl")
+    assert distribution.version == "0.4.2"
+    assert direct_url["url"].endswith("/v0.4.2/wald_inference-0.4.2-py3-none-any.whl")
     assert package["wheels"] == [
         {
             "url": direct_url["url"],
-            "hash": ("sha256:d7272023f65088729d3ff997cab7cac57b84f22ac6108244ec2170434557d99b"),
+            "hash": ("sha256:225331d7b9d7b70e2508eecb92851a92a8c4e245baf412a1eb0f464d85da1349"),
         }
     ]

@@ -19,7 +19,7 @@ scientific artifact is included.
 ## Numerical extraction
 
 Numerical formulas were not copied into this repository. They were extracted, validated, and
-released separately in `reblocke/wald-inference-core`. This app consumes Core 0.4.1's
+released separately in `reblocke/wald-inference-core`. This app consumes Core 0.4.2's
 `joint_precision_result` and `precision_sensitivity` APIs plus released forward/reconstruction
 primitives. The exact wheel URL, checksum, tag target, and license are documented in
 `RUNTIME_DEPENDENCIES.md`.

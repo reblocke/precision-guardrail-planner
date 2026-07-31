@@ -21,9 +21,9 @@ protected health information, credentials, restricted data, or sensitive values 
 report. Contribution and release requirements are documented in
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
-> **Release metadata:** Current app version: `0.1.2`.
+> **Release metadata:** Current app version: `0.1.3`.
 > Release maturity: experimental software. GitHub publication state is recorded on the versioned release page:
-> <https://github.com/reblocke/precision-guardrail-planner/releases/tag/v0.1.2>.
+> <https://github.com/reblocke/precision-guardrail-planner/releases/tag/v0.1.3>.
 > Cite the exact tagged software release or commit used; see [CITATION.cff](CITATION.cff).
 
 ## What it reports
@@ -100,12 +100,12 @@ censoring, covariate adjustment, finite populations, or any other design-specifi
 The app does not implement a Wald solver. All effect conversion, CI reconstruction, selected
 claim semantics, forward Type S/M metrics, per-target inversion, joint solution, and sensitivity
 results come from the exact released
-[`wald-inference` 0.4.1](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.1)
+[`wald-inference` 0.4.2](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.2)
 wheel:
 
 ```text
-https://github.com/reblocke/wald-inference-core/releases/download/v0.4.1/wald_inference-0.4.1-py3-none-any.whl
-SHA-256 d7272023f65088729d3ff997cab7cac57b84f22ac6108244ec2170434557d99b
+https://github.com/reblocke/wald-inference-core/releases/download/v0.4.2/wald_inference-0.4.2-py3-none-any.whl
+SHA-256 225331d7b9d7b70e2508eecb92851a92a8c4e245baf412a1eb0f464d85da1349
 ```
 
 The local `precision_guardrail` package owns only strict request validation, natural/working-scale
@@ -207,7 +207,7 @@ See [scientific scope](docs/SCIENTIFIC_SCOPE.md),
 - [Integrated workbench](https://reblocke.github.io/conf_curve_likelihood/).
 - [Precision Guardrail Planner repository](https://github.com/reblocke/precision-guardrail-planner).
 - Numerical core:
-  [wald-inference Core v0.4.1](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.1).
+  [wald-inference Core v0.4.2](https://github.com/reblocke/wald-inference-core/releases/tag/v0.4.2).
 - Privacy: calculations stay in the browser and entered values are not persisted or transmitted;
   see the [privacy note](docs/PRIVACY.md).
 
