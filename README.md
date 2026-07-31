@@ -177,15 +177,15 @@ git diff --check
 git status --short
 ```
 
-A new version is published only from a signed annotated tag whose commit is already contained in
+A new version is published only from an annotated tag whose commit is already contained in
 protected `main`. The release workflow verifies the tag before executing repository code, reruns
 the complete suite with read-only contents permission, builds a deterministic source archive,
 browser-stage manifest, and checksums, and transfers them to a narrowly write-enabled publishing
-job. That job requires repository release immutability through the
-`RELEASE_SETTINGS_READ_TOKEN` Actions secret, creates one draft stable release, re-downloads and
-compares the exact release body and every asset, and publishes only the verified draft.
-Credentialed commands use an exact checksummed GitHub CLI. Release notes contain only the tagged
-version's nonempty changelog section.
+job. That job creates one draft stable release, re-downloads and compares the exact release body
+and every asset, publishes only the verified draft, then requires the release to report immutable.
+Credentialed commands use an exact checksummed GitHub CLI with the job-scoped GitHub token; no
+external release credential is required. Release notes contain only the tagged version's nonempty
+changelog section.
 
 The suite covers the frozen integrated B06/B07 baseline values, all six claim rules, current
 sufficiency, strictness/ties, infeasibility, near-null behavior, threshold unattainability,
