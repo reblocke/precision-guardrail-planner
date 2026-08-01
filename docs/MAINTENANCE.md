@@ -4,7 +4,7 @@
 
 Status: experimental, actively maintained software.
 
-Current version: 0.1.3.
+Current version: 0.1.4.
 
 Maintainer: Brian Locke (`@reblocke`). Use the scoped repository issue forms and reviewed pull
 requests for nonsensitive public coordination. Report vulnerabilities and privacy defects

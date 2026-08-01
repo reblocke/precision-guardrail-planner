@@ -5,6 +5,15 @@ All notable changes use a release-oriented record here. This repository follows
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-07-31
+
+- Update the locked test/build toolchain to pytest 9.1.1 and setuptools 83.0.0.
+- Update the reviewed, full-SHA GitHub Actions pins used by CI, Pages, and release workflows.
+- Publish the maintenance-only app state as an immutable patch release so the hosted Pages commit,
+  package metadata, citation, and release artifacts identify the same source commit.
+- Preserve the exact Core v0.4.2 pin, all inverse-precision and joint-solution semantics, focused
+  response/export contracts, browser behavior, negative scope, and client-side privacy boundary.
+
 ## [0.1.3] - 2026-07-31
 
 - Harden CI, Pages, and release automation with least-privilege permissions, full-SHA Action pins,
@@ -55,7 +64,8 @@ All notable changes use a release-oriented record here. This repository follows
 - Added B06/B07 migration regression tests, scientific invariants, all-rule coverage, Chromium and
   WebKit checks, privacy/accessibility checks, and deterministic browser staging.
 
-[Unreleased]: https://github.com/reblocke/precision-guardrail-planner/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/reblocke/precision-guardrail-planner/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/reblocke/precision-guardrail-planner/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/reblocke/precision-guardrail-planner/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/reblocke/precision-guardrail-planner/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/reblocke/precision-guardrail-planner/compare/v0.1.0...v0.1.1
