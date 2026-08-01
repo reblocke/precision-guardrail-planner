@@ -11,9 +11,21 @@ This focused app answers one design-conditioned question:
 > relative information are required to meet the chosen selected-claim probability, Type S, and
 > Type M guardrails?
 
-It is an educational and research-facing inverse-precision tool for one-parameter Wald models.
-It is not a formal study-design calculator, a clinical recommendation, or evidence that a target
-effect is clinically validated.
+## Why this app exists
+
+Prospective precision checks can involve several requirements at once: a minimum probability of a
+selected claim, a maximum wrong-sign risk, and a maximum magnitude exaggeration. This app makes
+those assumptions explicit, solves each requested guardrail, and identifies the most demanding
+constraint instead of presenting the targets as unrelated calculations.
+
+## Intended use and audience
+
+This is an educational and research-facing inverse-precision tool for investigators, reviewers,
+educators, and methods collaborators exploring one-parameter Wald scenarios. It is intended for
+comparing user-specified assumptions, exposing infeasible combinations, and preparing transparent
+methods or reviewer text. It is not a formal study-design calculator, a clinical recommendation,
+or evidence that an entered effect, threshold, or guardrail is scientifically or clinically
+validated.
 
 Public engineering, scientific-boundary, and accessibility reports use the scoped issue forms in
 `.github/`. Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md); never put
@@ -112,6 +124,10 @@ The local `precision_guardrail` package owns only strict request validation, nat
 display orchestration, response assembly, warnings, reviewer text, exports, and the explicitly
 opted-in arithmetic sample-size projection.
 
+The released Core also owns the joint inverse solver: per-target inversion, current-sufficiency
+semantics, infeasibility, binding ties, and sensitivity results are not reimplemented in this
+repository.
+
 ```text
 browser form
   -> dedicated Web Worker
@@ -145,6 +161,24 @@ warnings
 It contains no observed compatibility curve, relative-likelihood result, S−2 result, or full Type
 S/M curve. Forward design metrics appear only as achieved values at solved precision and as
 support for sensitivity rows.
+
+## Method references and source roles
+
+- Gelman A, Carlin J. Beyond Power Calculations: Assessing Type S (Sign) and Type M (Magnitude)
+  Errors. *Perspectives on Psychological Science*. 2014;9(6):641–651.
+  <https://doi.org/10.1177/1745691614551642>. This paper motivates Type S and Type M terminology
+  and interpretation; retrieved 2026-06-14; publisher page © the authors 2014, reuse by
+  permission.
+- Perugini A, Gambarota F, Toffalini E, et al. The Benefits of Reporting Critical-Effect-Size
+  Values. *Advances in Methods and Practices in Psychological Science*.
+  2025;8(2):25152459251335298.
+  <https://doi.org/10.1177/25152459251335298>. This paper supplies contextual rationale for
+  detectability and critical-effect-size thinking; retrieved 2026-04-23; CC BY-NC 4.0.
+
+Neither paper defines or validates this app's exact joint inverse-precision solver. The released
+Core APIs, documentation, and tests govern the implemented quantities. The citations are
+contextual: no external figure, table, dataset, code, or substantial text is copied here, and
+publisher access and reuse terms continue to apply.
 
 ## Exports
 
@@ -221,4 +255,6 @@ an explicit local download action. See [docs/PRIVACY.md](docs/PRIVACY.md).
 ## License and citation
 
 Code is MIT licensed. Copyright (c) 2026 Brian Locke. Cite the exact release or commit used;
-machine-readable metadata is in [CITATION.cff](CITATION.cff).
+machine-readable software metadata is in [CITATION.cff](CITATION.cff). When discussing Type S/M
+or critical-effect-size rationale, also cite the applicable method source above; those papers do
+not replace the software citation or the released Core as implementation authority.
