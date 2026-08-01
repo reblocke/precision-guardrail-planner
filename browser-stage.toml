@@ -6,7 +6,7 @@ pyodide_packages = ["numpy", "scipy"]
 role = "app"
 distribution = "precision-guardrail-planner"
 import_name = "precision_guardrail"
-version = "0.1.3"
+version = "0.1.4"
 source = "project"
 
 [[packages]]

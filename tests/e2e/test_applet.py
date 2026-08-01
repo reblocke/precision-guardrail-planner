@@ -29,7 +29,7 @@ def test_worker_loads_core_and_calculates_joint_requirement(
     _ready(page, app_url)
     _calculate(page)
 
-    expect(page.locator("#runtime-versions")).to_contain_text("precision-guardrail-planner 0.1.3")
+    expect(page.locator("#runtime-versions")).to_contain_text("precision-guardrail-planner 0.1.4")
     expect(page.locator("#runtime-versions")).to_contain_text("wald-inference 0.4.2")
     expect(page.locator("#core-version")).to_have_text("wald-inference Core v0.4.2")
     expect(page.locator("#result-summary")).to_contain_text("4.908")
